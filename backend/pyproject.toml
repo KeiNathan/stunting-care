@@ -1,0 +1,2 @@
+[tool.uv.extra-build-dependencies]
+pygrowup = ["six", "setuptools"]
