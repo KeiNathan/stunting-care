@@ -1,0 +1,135 @@
+@import "tailwindcss";
+
+.dark {
+  color-scheme: dark;
+}
+
+.dark [class~="bg-[#F0FDFA]"],
+.dark [class~="bg-white"],
+.dark [class~="bg-gray-50"] {
+  background-color: #1e293b;
+}
+
+.dark [class~="bg-cyan-50"],
+.dark [class~="bg-teal-50"] {
+  background-color: #134e4a;
+}
+
+.dark [class~="bg-green-50"] {
+  background-color: #14532d;
+}
+
+.dark [class~="bg-red-50"] {
+  background-color: #7f1d1d;
+}
+
+.dark [class~="bg-yellow-50"] {
+  background-color: #713f12;
+}
+
+.dark [class~="bg-purple-50"] {
+  background-color: #3b2b59;
+}
+
+.dark [class~="bg-pink-50"] {
+  background-color: #831843;
+}
+
+.dark [class~="bg-teal-100"],
+.dark [class~="bg-cyan-100"] {
+  background-color: #134e4a;
+}
+
+.dark [class~="bg-teal-200"] {
+  background-color: #115e59;
+}
+
+.dark [class~="hover:bg-gray-50"]:hover {
+  background-color: #334155;
+}
+
+.dark [class~="hover:bg-cyan-50"]:hover,
+.dark [class~="hover:bg-teal-50"]:hover {
+  background-color: #115e59;
+}
+
+.dark [class~="text-gray-800"] {
+  color: #f1f5f9;
+}
+
+.dark [class~="text-gray-700"] {
+  color: #e2e8f0;
+}
+
+.dark [class~="text-gray-600"] {
+  color: #cbd5e1;
+}
+
+.dark [class~="text-gray-500"],
+.dark [class~="text-gray-400"] {
+  color: #94a3b8;
+}
+
+.dark [class~="text-teal-800"],
+.dark [class~="text-teal-700"],
+.dark [class~="text-teal-600"] {
+  color: #99f6e4;
+}
+
+.dark [class~="text-red-600"],
+.dark [class~="text-red-700"] {
+  color: #fca5a5;
+}
+
+.dark [class~="text-green-600"],
+.dark [class~="text-green-700"] {
+  color: #86efac;
+}
+
+.dark [class~="text-yellow-600"],
+.dark [class~="text-yellow-700"] {
+  color: #fde047;
+}
+
+.dark [class~="border-gray-100"],
+.dark [class~="border-gray-200"],
+.dark [class~="border-gray-300"] {
+  border-color: #334155;
+}
+
+.dark [class~="border-cyan-100"] {
+  border-color: #155e75;
+}
+
+.dark [class~="bg-gradient-to-br"] {
+  background-image: none;
+  background-color: #0f172a;
+}
+
+.dark input,
+.dark select,
+.dark textarea {
+  color: #e2e8f0;
+  background-color: #0f172a;
+  border-color: #475569;
+}
+
+.dark input::placeholder {
+  color: #94a3b8;
+}
+
+.dark .recharts-cartesian-grid line {
+  stroke: #334155;
+}
+
+.dark .recharts-default-tooltip {
+  color: #e2e8f0;
+  background-color: #1e293b !important;
+  border-color: #475569 !important;
+}
+
+@media (max-width: 767px) {
+  .stunting-pie-chart .recharts-pie-labels {
+    display: none;
+  }
+}

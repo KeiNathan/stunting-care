@@ -1,0 +1,131 @@
+{
+  "all_features": [
+    "Child Age",
+    "Birth Length",
+    "Birth Weight",
+    "Height",
+    "Weight",
+    "Mother Age",
+    "Mother Height",
+    "ANC Visits",
+    "Complementary Feeding Start Age",
+    "Diarrhea Frequency",
+    "height_per_age",
+    "weight_per_age",
+    "bmi",
+    "birth_bmi",
+    "height_growth_rate",
+    "weight_growth_rate",
+    "mother_child_height_ratio",
+    "height_to_weight",
+    "expected_height",
+    "height_diff_expected",
+    "height_pct_expected",
+    "expected_weight",
+    "weight_diff_expected",
+    "weight_pct_expected",
+    "Gender",
+    "Exclusive Breastfeeding",
+    "Drinking Water Source",
+    "Sanitation",
+    "Residence Type",
+    "Deworming Drug Consumption",
+    "Mother Education",
+    "Immunization",
+    "Economic Level"
+  ],
+  "input_features": [
+    "Child Age",
+    "Gender",
+    "Birth Length",
+    "Birth Weight",
+    "Height",
+    "Weight",
+    "Mother Height",
+    "Exclusive Breastfeeding",
+    "Immunization",
+    "Sanitation",
+    "Economic Level"
+  ],
+  "num_features": [
+    "Child Age",
+    "Birth Length",
+    "Birth Weight",
+    "Height",
+    "Weight",
+    "Mother Age",
+    "Mother Height",
+    "ANC Visits",
+    "Complementary Feeding Start Age",
+    "Diarrhea Frequency",
+    "height_per_age",
+    "weight_per_age",
+    "bmi",
+    "birth_bmi",
+    "height_growth_rate",
+    "weight_growth_rate",
+    "mother_child_height_ratio",
+    "height_to_weight",
+    "expected_height",
+    "height_diff_expected",
+    "height_pct_expected",
+    "expected_weight",
+    "weight_diff_expected",
+    "weight_pct_expected"
+  ],
+  "cat_nominal": [
+    "Gender",
+    "Exclusive Breastfeeding",
+    "Drinking Water Source",
+    "Sanitation",
+    "Residence Type",
+    "Deworming Drug Consumption"
+  ],
+  "cat_ordinal": {
+    "Mother Education": [
+      "No Education",
+      "Elementary/Middle School",
+      "High School",
+      "University"
+    ],
+    "Immunization": [
+      "Not Immunized",
+      "Incomplete",
+      "Complete"
+    ],
+    "Economic Level": [
+      "Low",
+      "Middle",
+      "High"
+    ]
+  },
+  "target": "Stunting Risk",
+  "classes": [
+    "High",
+    "Low",
+    "Medium"
+  ],
+  "train_metrics": {
+    "accuracy": 0.9633300297324083,
+    "precision": 0.9671616571238397,
+    "recall": 0.9633300297324083,
+    "f1": 0.9642566641845978
+  },
+  "test_metrics": {
+    "accuracy": 0.9188118811881189,
+    "precision": 0.9291782545543745,
+    "recall": 0.9188118811881189,
+    "f1": 0.9219139485162909
+  },
+  "zscore_library": "pygrowup",
+  "zscore_indicators": {
+    "HAZ": "Height-for-Age Z-Score ¨ deteksi stunting",
+    "WAZ": "Weight-for-Age Z-Score ¨ deteksi underweight",
+    "WHZ": "Weight-for-Height Z-Score ¨ deteksi wasting"
+  },
+  "zscore_thresholds": {
+    "normal": "Z-Score >= -2 SD",
+    "moderate": "-3 SD <= Z-Score < -2 SD",
+    "severe": "Z-Score < -3 SD"
+  }
+}
