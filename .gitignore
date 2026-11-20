@@ -4,9 +4,6 @@ venv/
 __pycache__/
 *.pyc
 *.pyo
-backend/model/rf_model.pkl
-backend/model/preprocessor.pkl
-backend/model/label_encoder.pkl
 
 # Frontend
 frontend/node_modules/
