@@ -19,6 +19,7 @@ dependencies = [
     "python-multipart==0.0.12",
     "pygrowup==0.8.2",
     "pydantic",
+    "email-validator",
     "six",
     "setuptools",
 ]

@@ -13,4 +13,5 @@ numpy==1.26.4
 joblib==1.4.2
 pygrowup==0.8.2
 six
+email-validator
 python-multipart==0.0.12
