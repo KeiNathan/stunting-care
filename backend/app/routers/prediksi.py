@@ -184,3 +184,16 @@ def get_detail_prediksi(
     if not p.hasil_analisis:
         raise HTTPException(status_code=404, detail="Hasil analisis tidak ditemukan")
     return {"pengukuran": p, "hasil": p.hasil_analisis}
+
+
+@router.delete("/{pengukuran_id}", status_code=204)
+def delete_prediksi(
+    pengukuran_id: uuid.UUID,
+    db           : Session = Depends(get_db),
+    current_user : User    = Depends(require_kader_or_admin)
+):
+    pengukuran = db.query(Pengukuran).filter(Pengukuran.id == pengukuran_id).first()
+    if not pengukuran:
+        raise HTTPException(status_code=404, detail="Riwayat pengukuran tidak ditemukan")
+    db.delete(pengukuran)
+    db.commit()

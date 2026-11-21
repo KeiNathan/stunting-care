@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react'
 import { useSearchParams } from 'react-router-dom'
+import { useAuth } from '../context/AuthContext'
 import api from '../api/axios'
 import {
   LineChart, Line, XAxis, YAxis, CartesianGrid,
   Tooltip, ResponsiveContainer, ReferenceLine, Legend
 } from 'recharts'
-import { ClipboardList, TrendingUp, Calendar } from 'lucide-react'
+import { ClipboardList, TrendingUp, Calendar, Trash2 } from 'lucide-react'
 
 const RISK_COLOR = {
   Low:    { bg: 'bg-green-100',  text: 'text-green-700',  label: 'Risiko Rendah'  },
@@ -20,6 +21,7 @@ const STUNTING_COLOR = {
 }
 
 export default function Riwayat() {
+  const { user } = useAuth()
   const [searchParams]          = useSearchParams()
   const balitaIdParam           = searchParams.get('balita_id')
   const namaParam               = searchParams.get('nama')
@@ -30,6 +32,7 @@ export default function Riwayat() {
   const [riwayat, setRiwayat]         = useState([])
   const [loading, setLoading]         = useState(false)
   const [activeTab, setActiveTab]     = useState('grafik')
+  const [deletingId, setDeletingId]   = useState(null)
 
   useEffect(() => {
     api.get('/api/balita/').then(res => setBalitaList(res.data))
@@ -54,6 +57,22 @@ export default function Riwayat() {
     setNamaBalita(nama)
     if (id) fetchRiwayat(id)
     else setRiwayat([])
+  }
+
+  const handleDelete = async (item) => {
+    const pengukuranId = item.pengukuran.id
+    const tanggal = new Date(item.pengukuran.tanggal).toLocaleDateString('id-ID')
+    if (!confirm(`Hapus riwayat prediksi tanggal ${tanggal}? Hasil analisis terkait juga akan dihapus.`)) return
+
+    setDeletingId(pengukuranId)
+    try {
+      await api.delete(`/api/prediksi/${pengukuranId}`)
+      setRiwayat(current => current.filter(r => r.pengukuran.id !== pengukuranId))
+    } catch (error) {
+      alert(error.response?.data?.detail || 'Gagal menghapus riwayat prediksi')
+    } finally {
+      setDeletingId(null)
+    }
   }
 
   // Data untuk grafik
@@ -263,7 +282,8 @@ export default function Riwayat() {
                   <table className="w-full text-sm">
                     <thead>
                       <tr className="border-b border-gray-200">
-                        {['Tanggal','TB (cm)','BB (kg)','HAZ','WAZ','Status Stunting','Risiko','Skor'].map(h => (
+                        {['Tanggal','TB (cm)','BB (kg)','HAZ','WAZ','Status Stunting','Risiko','Skor',
+                          ...(user?.role === 'admin' || user?.role === 'kader' ? ['Aksi'] : [])].map(h => (
                           <th key={h} className="text-left py-3 px-2 text-xs font-semibold text-gray-500">
                             {h}
                           </th>
@@ -306,6 +326,22 @@ export default function Riwayat() {
                           <td className="py-3 px-2 text-gray-600">
                             {r.hasil.risk_score.toFixed(1)}%
                           </td>
+                          {(user?.role === 'admin' || user?.role === 'kader') && (
+                            <td className="py-3 px-2">
+                              <button
+                                type="button"
+                                onClick={() => handleDelete(r)}
+                                disabled={deletingId === r.pengukuran.id}
+                                aria-label="Hapus riwayat prediksi"
+                                title="Hapus riwayat prediksi"
+                                className="p-1.5 border border-red-200 text-red-500
+                                           hover:bg-red-50 rounded-lg transition-all
+                                           disabled:cursor-not-allowed disabled:opacity-50"
+                              >
+                                <Trash2 size={14}/>
+                              </button>
+                            </td>
+                          )}
                         </tr>
                       ))}
                     </tbody>
