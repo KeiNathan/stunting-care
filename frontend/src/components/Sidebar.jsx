@@ -96,8 +96,10 @@ export default function Sidebar({ collapsed, onToggle, darkMode, onToggleTheme }
             aria-expanded={!collapsed}
             className={`hidden h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg
               text-teal-100 hover:bg-cyan-100/15 hover:text-white transition-colors
-              md:absolute md:right-4 md:z-10 md:flex md:transition-all md:duration-200 md:ease-in-out
-              ${collapsed ? 'md:top-[68px]' : 'md:top-4'}`}
+              md:absolute md:z-10 md:flex md:transition-all md:duration-200 md:ease-in-out
+              ${collapsed
+                ? 'md:top-[68px] md:left-1/2 md:right-auto md:-translate-x-1/2'
+                : 'md:top-4 md:right-4'}`}
           >
             {collapsed ? <ChevronRight size={18}/> : <ChevronLeft size={18}/>}
           </button>
