@@ -24,7 +24,7 @@ function Layout({ children, darkMode, onToggleTheme }) {
         darkMode={darkMode}
         onToggleTheme={onToggleTheme}
       />
-      <main className="min-w-0 flex-1 px-4 pt-24 pb-6 overflow-auto md:p-6">{children}</main>
+      <main className="min-h-screen min-w-0 flex-1 px-4 pt-24 pb-6 md:p-6">{children}</main>
     </div>
   )
 }

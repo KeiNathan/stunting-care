@@ -19,11 +19,23 @@
   background-color: #14532d;
 }
 
+.dark [class~="bg-green-100"] {
+  background-color: #14532d;
+}
+
 .dark [class~="bg-red-50"] {
   background-color: #7f1d1d;
 }
 
+.dark [class~="bg-red-100"] {
+  background-color: #7f1d1d;
+}
+
 .dark [class~="bg-yellow-50"] {
+  background-color: #713f12;
+}
+
+.dark [class~="bg-yellow-100"] {
   background-color: #713f12;
 }
 

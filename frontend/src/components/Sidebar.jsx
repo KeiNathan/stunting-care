@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { NavLink, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import {
-  LayoutDashboard, Baby, ClipboardList, ChevronLeft, ChevronRight,
+  LayoutDashboard, Baby, ClipboardList, ChevronDown, ChevronLeft, ChevronRight, ChevronUp,
   Users, Activity, Moon, Sun
 } from 'lucide-react'
 
@@ -52,7 +52,7 @@ export default function Sidebar({ collapsed, onToggle, darkMode, onToggleTheme }
 
   return (
     <aside className={`${collapsed ? 'md:w-20' : 'md:w-64'} fixed inset-x-0 top-0 z-40
-                       max-h-screen overflow-y-auto md:static md:min-h-screen md:flex-shrink-0
+                       max-h-screen overflow-y-auto md:sticky md:top-0 md:h-screen md:max-h-screen md:flex-shrink-0
                        ${darkMode ? 'bg-slate-950' : 'bg-teal-700'} text-white flex flex-col
                        md:transition-[width] md:duration-200 md:ease-in-out`}>
       {/* Logo */}
@@ -84,7 +84,7 @@ export default function Sidebar({ collapsed, onToggle, darkMode, onToggleTheme }
             className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg
                        text-teal-100 hover:bg-cyan-100/15 hover:text-white transition-colors md:hidden"
           >
-            {mobileOpen ? <ChevronLeft size={18}/> : <ChevronRight size={18}/>}
+            {mobileOpen ? <ChevronUp size={18}/> : <ChevronDown size={18}/>}
           </button>
           <button
             type="button"
@@ -99,7 +99,12 @@ export default function Sidebar({ collapsed, onToggle, darkMode, onToggleTheme }
         </div>
       </div>
 
-      <div className={`${mobileOpen ? 'flex' : 'hidden'} md:contents flex-1 flex-col`}>
+      <div className={`flex flex-1 flex-col overflow-y-auto transition-[max-height,opacity,transform]
+        duration-300 ease-out motion-reduce:transition-none md:contents md:max-h-none
+        md:translate-y-0 md:overflow-visible md:opacity-100 md:pointer-events-auto
+        ${mobileOpen
+          ? 'max-h-[calc(100dvh-4rem)] translate-y-0 opacity-100'
+          : 'pointer-events-none max-h-0 -translate-y-2 opacity-0'}`}>
       {/* User info */}
       <div className="p-4 border-b border-teal-500/50">
         <div className={`flex items-center gap-3 ${collapsed ? 'md:justify-center md:gap-0' : ''}`}>
