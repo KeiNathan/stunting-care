@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { NavLink, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import {
-  LayoutDashboard, Baby, ClipboardList, ChevronDown, ChevronLeft, ChevronUp,
+  LayoutDashboard, Baby, ClipboardList, ChevronDown, ChevronLeft, ChevronRight, ChevronUp,
   Users, Activity, Moon, Sun
 } from 'lucide-react'
 
@@ -56,10 +56,13 @@ export default function Sidebar({ collapsed, onToggle, darkMode, onToggleTheme }
                        ${darkMode ? 'bg-slate-950' : 'bg-teal-700'} text-white flex flex-col
                        md:transition-[width] md:duration-200 md:ease-in-out`}>
       {/* Logo */}
-      <div className="p-4 border-b border-teal-500/50">
-        <div className="flex items-center justify-between gap-2">
+      <div className={`relative p-4 border-b border-teal-500/50
+        md:transition-[height] md:duration-200 md:ease-in-out
+        ${collapsed ? 'md:h-28' : 'md:h-[72px]'}`}>
+        <div className={`flex items-center justify-between gap-2
+          ${collapsed ? 'md:justify-center' : ''}`}>
           <div className="flex items-center gap-3 min-w-0">
-          <div className="w-10 h-10 bg-[#F0FDFA] rounded-xl flex items-center
+          <div className="w-10 h-10 flex-shrink-0 bg-[#F0FDFA] rounded-xl flex items-center
                           justify-center text-xl">
             <img
               src="/stuntingcare-mark.png"
@@ -91,10 +94,12 @@ export default function Sidebar({ collapsed, onToggle, darkMode, onToggleTheme }
             onClick={onToggle}
             aria-label={collapsed ? 'Buka sidebar' : 'Tutup sidebar'}
             aria-expanded={!collapsed}
-            className="hidden h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg
-                       text-teal-100 hover:bg-cyan-100/15 hover:text-white transition-colors md:flex"
+            className={`hidden h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg
+              text-teal-100 hover:bg-cyan-100/15 hover:text-white transition-colors
+              md:absolute md:right-4 md:z-10 md:flex md:transition-all md:duration-200 md:ease-in-out
+              ${collapsed ? 'md:top-[68px]' : 'md:top-4'}`}
           >
-            {collapsed ? <ChevronDown size={18}/> : <ChevronLeft size={18}/>}
+            {collapsed ? <ChevronRight size={18}/> : <ChevronLeft size={18}/>}
           </button>
         </div>
       </div>
