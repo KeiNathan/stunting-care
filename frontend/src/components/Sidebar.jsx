@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { NavLink, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import {
-  LayoutDashboard, Baby, ClipboardList, ChevronDown, ChevronLeft, ChevronRight, ChevronUp,
+  LayoutDashboard, Baby, ClipboardList, ChevronDown, ChevronLeft, ChevronUp,
   Users, Activity, Moon, Sun
 } from 'lucide-react'
 
@@ -94,7 +94,7 @@ export default function Sidebar({ collapsed, onToggle, darkMode, onToggleTheme }
             className="hidden h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg
                        text-teal-100 hover:bg-cyan-100/15 hover:text-white transition-colors md:flex"
           >
-            {collapsed ? <ChevronRight size={18}/> : <ChevronLeft size={18}/>}
+            {collapsed ? <ChevronDown size={18}/> : <ChevronLeft size={18}/>}
           </button>
         </div>
       </div>

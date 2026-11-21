@@ -15,7 +15,7 @@ function Layout({ children, darkMode, onToggleTheme }) {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
 
   return (
-    <div className={`flex min-h-screen ${darkMode
+    <div className={`flex min-h-dvh ${darkMode
       ? 'bg-slate-900 text-slate-100'
       : 'bg-gradient-to-br from-[#F0FDFA] to-[#E0F2FE]'}`}>
       <Sidebar
@@ -24,7 +24,7 @@ function Layout({ children, darkMode, onToggleTheme }) {
         darkMode={darkMode}
         onToggleTheme={onToggleTheme}
       />
-      <main className="min-h-screen min-w-0 flex-1 px-4 pt-24 pb-6 md:p-6">{children}</main>
+      <main className="min-h-dvh min-w-0 flex-1 px-4 pt-24 pb-6 md:p-6">{children}</main>
     </div>
   )
 }
@@ -71,7 +71,7 @@ export default function App() {
   const toggleTheme = () => setDarkMode(current => !current)
 
   return (
-    <div className={darkMode ? 'dark min-h-screen bg-slate-900' : 'min-h-screen'}>
+    <div className={darkMode ? 'dark min-h-dvh bg-slate-900' : 'min-h-dvh'}>
       <AuthProvider>
         <BrowserRouter>
           <PageMetadata/>
