@@ -3,6 +3,7 @@ import numpy as np
 import pandas as pd
 from datetime import date
 import os
+from app.services.growth_validation import get_growth_measurement_error
 
 # ── Load model artifacts ──────────────────────────────────────
 BASE_DIR   = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
@@ -236,6 +237,14 @@ def predict_stunting(
 ) -> dict:
     """Jalankan prediksi Random Forest + kalkulasi Z-Score WHO."""
 
+    zscore_result = zscore_calc.calculate(age_months, height_cm, weight_kg, gender)
+    if "error" in zscore_result:
+        return {"zscore": zscore_result}
+
+    validation_error = get_growth_measurement_error(zscore_result)
+    if validation_error:
+        return {"zscore": {"error": validation_error}}
+
     # 1. Buat raw dataframe dengan nama kolom SAMA dengan training
     raw = {
         "Child Age"                      : age_months,
@@ -273,10 +282,7 @@ def predict_stunting(
     risk_level = le.inverse_transform([y_pred])[0]
     risk_score = round(float(max(y_proba)) * 100, 2)
 
-    # 5. Z-Score WHO
-    zscore_result = zscore_calc.calculate(age_months, height_cm, weight_kg, gender)
-
-    # 6. Rekomendasi
+    # 5. Rekomendasi
     if risk_level == "High":
         rekomendasi = ("Risiko tinggi terdeteksi. Segera konsultasikan dengan "
                        "dokter atau ahli gizi. Perhatikan asupan protein, "
