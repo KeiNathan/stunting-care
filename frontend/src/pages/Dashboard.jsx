@@ -129,6 +129,13 @@ export default function Dashboard() {
                   innerRadius={60} outerRadius={80}
                   paddingAngle={3}
                   dataKey="value"
+                  label={({ name, percent }) => {
+                    const roundedPercent = Math.round(percent * 100)
+                    return roundedPercent > 0
+                      ? `${name} ${roundedPercent}%`
+                      : null
+                  }}
+                  labelLine={false}
                 >
                   {stuntingData.map((entry) => (
                     <Cell key={entry.name} fill={COLORS_STUNTING[entry.name] || '#6366f1'}/>
