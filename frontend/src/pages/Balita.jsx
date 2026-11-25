@@ -348,7 +348,7 @@ export default function Balita() {
             value={search}
             onChange={e => setSearch(e.target.value)}
             placeholder="Cari nama balita atau nama ibu..."
-            className="w-full bg-white pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg text-sm
+            className="w-full bg-[#F0FDFA] pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg text-sm
                        focus:outline-none focus:ring-2 focus:ring-cyan-400"
           />
         </div>
@@ -356,15 +356,15 @@ export default function Balita() {
           value={sortBy}
           onChange={e => setSortBy(e.target.value)}
           aria-label="Urutkan data balita"
-          className="border border-gray-300 rounded-lg px-3 py-2.5 text-sm bg-white
+          className="border border-gray-300 rounded-lg px-3 py-2.5 text-sm bg-[#F0FDFA]
                      focus:outline-none focus:ring-2 focus:ring-cyan-400"
         >
-          <option value="name-asc">Nama (A-Z)</option>
-          <option value="name-desc">Nama (Z-A)</option>
-          <option value="birth-newest">Tanggal lahir (terbaru)</option>
-          <option value="birth-oldest">Tanggal lahir (terlama)</option>
-          <option value="created-newest">Tanggal daftar (terbaru)</option>
-          <option value="created-oldest">Tanggal daftar (terlama)</option>
+          <option className="bg-[#F0FDFA]" value="name-asc">Nama (A-Z)</option>
+          <option className="bg-[#F0FDFA]" value="name-desc">Nama (Z-A)</option>
+          <option className="bg-[#F0FDFA]" value="birth-newest">Tanggal lahir (terbaru)</option>
+          <option className="bg-[#F0FDFA]" value="birth-oldest">Tanggal lahir (terlama)</option>
+          <option className="bg-[#F0FDFA]" value="created-newest">Tanggal daftar (terbaru)</option>
+          <option className="bg-[#F0FDFA]" value="created-oldest">Tanggal daftar (terlama)</option>
         </select>
       </div>
 
