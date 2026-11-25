@@ -141,9 +141,12 @@ function HasilPrediksi({ hasil, onReset }) {
 export default function Prediksi() {
   const [searchParams] = useSearchParams()
   const balitaId       = searchParams.get('balita_id')
+  const namaBalita     = searchParams.get('nama') || ''
 
   const [balitaList, setBalitaList] = useState([])
   const [selectedBalita, setSelectedBalita] = useState(balitaId || '')
+  const [balitaSearch, setBalitaSearch] = useState(namaBalita)
+  const [showBalitaResults, setShowBalitaResults] = useState(false)
   const [loading, setLoading]   = useState(false)
   const [hasil, setHasil]       = useState(null)
   const [error, setError]       = useState('')
@@ -174,11 +177,23 @@ export default function Prediksi() {
 
   useEffect(() => {
     api.get('/api/balita/').then(res => setBalitaList(res.data))
+      .catch(err => setError(err.response?.data?.detail || 'Gagal memuat data balita'))
   }, [])
+
+  const balitaTerpilih = balitaList.find(b => b.id === selectedBalita)
+  const nilaiPencarian = balitaTerpilih?.nama || balitaSearch
+  const hasilPencarian = balitaList.filter(b => {
+    const query = balitaSearch.trim().toLocaleLowerCase('id')
+    return b.nama.toLocaleLowerCase('id').includes(query)
+      || b.nama_ibu.toLocaleLowerCase('id').includes(query)
+  })
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    if (!selectedBalita) { setError('Pilih balita terlebih dahulu'); return }
+    if (!balitaTerpilih) {
+      setError('Cari dan pilih satu balita dari daftar terlebih dahulu')
+      return
+    }
     setLoading(true)
     setError('')
     try {
@@ -241,20 +256,113 @@ export default function Prediksi() {
           <h2 className="font-semibold text-gray-700 flex items-center gap-2">
             <Activity size={16} className="text-teal-600"/> Pilih Balita
           </h2>
-          <select
-            value={selectedBalita}
-            onChange={e => setSelectedBalita(e.target.value)}
-            className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm
-                       focus:outline-none focus:ring-2 focus:ring-cyan-400"
-            required
+          <div
+            className="relative"
+            onBlur={e => {
+              if (!e.currentTarget.contains(e.relatedTarget)) setShowBalitaResults(false)
+            }}
           >
-            <option value="">-- Pilih Balita --</option>
-            {balitaList.map(b => (
-              <option key={b.id} value={b.id}>
-                {b.nama} ({b.jenis_kelamin === 'M' ? 'L' : 'P'})
-              </option>
-            ))}
-          </select>
+            <label htmlFor="cari-balita" className="block text-sm font-medium text-gray-700 mb-1">
+              Cari nama balita atau nama ibu
+            </label>
+            <input
+              id="cari-balita"
+              type="search"
+              role="combobox"
+              aria-autocomplete="list"
+              aria-expanded={showBalitaResults}
+              aria-controls="hasil-pencarian-balita"
+              value={nilaiPencarian}
+              onFocus={() => setShowBalitaResults(true)}
+              onChange={e => {
+                setBalitaSearch(e.target.value)
+                setSelectedBalita('')
+                setError('')
+                setShowBalitaResults(true)
+              }}
+              autoComplete="off"
+              placeholder="Ketik nama balita atau ibu..."
+              className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm
+                         focus:outline-none focus:ring-2 focus:ring-cyan-400"
+            />
+            {showBalitaResults && (
+              <div
+                id="hasil-pencarian-balita"
+                role="listbox"
+                className="absolute z-20 mt-1 max-h-56 w-full overflow-y-auto rounded-lg
+                           border border-gray-200 bg-white py-1 shadow-lg"
+              >
+                {hasilPencarian.length ? hasilPencarian.map(b => (
+                  <button
+                    key={b.id}
+                    type="button"
+                    role="option"
+                    aria-selected={b.id === selectedBalita}
+                    onClick={() => {
+                      setSelectedBalita(b.id)
+                      setBalitaSearch(b.nama)
+                      setShowBalitaResults(false)
+                      setError('')
+                    }}
+                    className="w-full px-4 py-2 text-left hover:bg-teal-50 focus:bg-teal-50
+                               focus:outline-none"
+                  >
+                    <span className="block text-sm font-medium text-gray-800">
+                      {b.nama} ({b.jenis_kelamin === 'M' ? 'Laki-laki' : 'Perempuan'})
+                    </span>
+                    <span className="block text-xs text-gray-500">Ibu: {b.nama_ibu}</span>
+                  </button>
+                )) : (
+                  <p className="px-4 py-3 text-sm text-gray-500">Balita tidak ditemukan</p>
+                )}
+              </div>
+            )}
+          </div>
+          {balitaTerpilih && (
+            <div className="rounded-lg border border-teal-100 bg-white p-4">
+              <div className="flex items-start justify-between gap-3">
+                <div>
+                  <p className="text-xs font-medium text-gray-500">Profil balita terpilih</p>
+                  <p className="font-semibold text-gray-800">{balitaTerpilih.nama}</p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setSelectedBalita('')
+                    setBalitaSearch('')
+                    setShowBalitaResults(true)
+                  }}
+                  className="text-sm text-teal-700 hover:underline"
+                >
+                  Ganti
+                </button>
+              </div>
+              <div className="mt-3 grid grid-cols-2 gap-x-3 gap-y-2 text-sm">
+                <span className="text-gray-500">Jenis kelamin</span>
+                <span className="text-gray-700">
+                  {balitaTerpilih.jenis_kelamin === 'M' ? 'Laki-laki' : 'Perempuan'}
+                </span>
+                <span className="text-gray-500">Tanggal lahir</span>
+                <span className="text-gray-700">
+                  {new Date(balitaTerpilih.tanggal_lahir).toLocaleDateString('id-ID', {
+                    day: 'numeric', month: 'long', year: 'numeric'
+                  })}
+                </span>
+                <span className="text-gray-500">Nama ibu</span>
+                <span className="text-gray-700">{balitaTerpilih.nama_ibu}</span>
+                <span className="text-gray-500">Panjang lahir</span>
+                <span className="text-gray-700">
+                  {balitaTerpilih.birth_length != null
+                    ? `${balitaTerpilih.birth_length} cm` : 'Belum diisi'}
+                </span>
+                <span className="text-gray-500">Berat lahir</span>
+                <span className="text-gray-700">
+                  {balitaTerpilih.birth_weight != null
+                    ? `${balitaTerpilih.birth_weight} kg` : 'Belum diisi'}
+                </span>
+              </div>
+            </div>
+          )}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Tanggal Pengukuran

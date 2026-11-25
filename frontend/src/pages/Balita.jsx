@@ -263,6 +263,7 @@ export default function Balita() {
   const [balitaList, setBalitaList] = useState([])
   const [filtered, setFiltered]     = useState([])
   const [search, setSearch]         = useState('')
+  const [sortBy, setSortBy]         = useState('name-asc')
   const [loading, setLoading]       = useState(true)
   const [showModal, setShowModal]   = useState(false)
   const [balitaDataLahir, setBalitaDataLahir] = useState(null)
@@ -283,11 +284,30 @@ export default function Balita() {
 
   useEffect(() => {
     const q = search.toLowerCase()
-    setFiltered(balitaList.filter(b =>
+    const matches = balitaList.filter(b =>
       b.nama.toLowerCase().includes(q) ||
       b.nama_ibu.toLowerCase().includes(q)
-    ))
-  }, [search, balitaList])
+    )
+    const compareDate = (left, right) =>
+      new Date(left || 0).getTime() - new Date(right || 0).getTime()
+    matches.sort((a, b) => {
+      switch (sortBy) {
+        case 'name-desc':
+          return b.nama.localeCompare(a.nama, 'id')
+        case 'birth-newest':
+          return compareDate(b.tanggal_lahir, a.tanggal_lahir)
+        case 'birth-oldest':
+          return compareDate(a.tanggal_lahir, b.tanggal_lahir)
+        case 'created-newest':
+          return compareDate(b.created_at, a.created_at)
+        case 'created-oldest':
+          return compareDate(a.created_at, b.created_at)
+        default:
+          return a.nama.localeCompare(b.nama, 'id')
+      }
+    })
+    setFiltered(matches)
+  }, [search, balitaList, sortBy])
 
   const handleDelete = async (id, nama) => {
     if (!confirm(`Hapus data balita "${nama}"?`)) return
@@ -320,16 +340,32 @@ export default function Balita() {
       </div>
 
       {/* Search */}
-      <div className="relative">
-        <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"/>
-        <input
-          type="text"
-          value={search}
-          onChange={e => setSearch(e.target.value)}
-          placeholder="Cari nama balita atau nama ibu..."
-          className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg text-sm
+      <div className="grid gap-3 sm:grid-cols-[minmax(0,1fr)_auto]">
+        <div className="relative">
+          <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"/>
+          <input
+            type="text"
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+            placeholder="Cari nama balita atau nama ibu..."
+            className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg text-sm
+                       focus:outline-none focus:ring-2 focus:ring-cyan-400"
+          />
+        </div>
+        <select
+          value={sortBy}
+          onChange={e => setSortBy(e.target.value)}
+          aria-label="Urutkan data balita"
+          className="border border-gray-300 rounded-lg px-3 py-2.5 text-sm bg-white
                      focus:outline-none focus:ring-2 focus:ring-cyan-400"
-        />
+        >
+          <option value="name-asc">Nama (A-Z)</option>
+          <option value="name-desc">Nama (Z-A)</option>
+          <option value="birth-newest">Tanggal lahir (terbaru)</option>
+          <option value="birth-oldest">Tanggal lahir (terlama)</option>
+          <option value="created-newest">Tanggal daftar (terbaru)</option>
+          <option value="created-oldest">Tanggal daftar (terlama)</option>
+        </select>
       </div>
 
       {/* List */}
@@ -406,14 +442,14 @@ export default function Balita() {
                   </button>
                 )}
                 <button
-                  onClick={() => navigate(`/prediksi?balita_id=${b.id}&nama=${b.nama}`)}
+                  onClick={() => navigate(`/prediksi?balita_id=${b.id}&nama=${encodeURIComponent(b.nama)}`)}
                   className="min-w-[calc(50%-0.25rem)] flex-1 bg-teal-600 hover:bg-teal-700 text-white
                              py-2 rounded-lg text-xs font-semibold transition-all"
                 >
                   Input Pengukuran
                 </button>
                 <button
-                  onClick={() => navigate(`/riwayat?balita_id=${b.id}&nama=${b.nama}`)}
+                  onClick={() => navigate(`/riwayat?balita_id=${b.id}&nama=${encodeURIComponent(b.nama)}`)}
                   className="min-w-[calc(50%-0.25rem)] flex-1 border border-gray-300 text-gray-600
                              hover:bg-gray-50 py-2 rounded-lg text-xs transition-all"
                 >
