@@ -348,7 +348,7 @@ export default function Balita() {
             value={search}
             onChange={e => setSearch(e.target.value)}
             placeholder="Cari nama balita atau nama ibu..."
-            className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg text-sm
+            className="w-full bg-white pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg text-sm
                        focus:outline-none focus:ring-2 focus:ring-cyan-400"
           />
         </div>

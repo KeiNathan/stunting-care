@@ -282,7 +282,7 @@ export default function Prediksi() {
               }}
               autoComplete="off"
               placeholder="Ketik nama balita atau ibu..."
-              className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm
+              className="w-full border border-gray-300 rounded-lg bg-white px-4 py-2.5 text-sm
                          focus:outline-none focus:ring-2 focus:ring-cyan-400"
             />
             {showBalitaResults && (
