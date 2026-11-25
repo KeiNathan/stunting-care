@@ -31,8 +31,6 @@ class PrediksiInput(BaseModel):
     imunisasi           : str
     asi_eksklusif       : bool
     # Fitur tambahan (opsional, pakai default jika tidak diisi)
-    birth_length        : Optional[float] = 50.0
-    birth_weight        : Optional[float] = 3.0
     mother_age          : Optional[float] = 28.0
     mother_height       : Optional[float] = 155.0
     mother_education    : Optional[str]   = "High School"
@@ -73,6 +71,11 @@ def buat_prediksi(
     balita = db.query(Balita).filter(Balita.id == data.balita_id).first()
     if not balita:
         raise HTTPException(status_code=404, detail="Balita tidak ditemukan")
+    if balita.birth_length is None or balita.birth_weight is None:
+        raise HTTPException(
+            status_code=400,
+            detail="Lengkapi panjang dan berat lahir pada data balita sebelum melakukan prediksi"
+        )
 
     # Hitung usia saat pengukuran (bulan)
     from dateutil.relativedelta import relativedelta
@@ -86,8 +89,8 @@ def buat_prediksi(
         gender            = gender,
         height_cm         = data.tinggi_cm,
         weight_kg         = data.berat_kg,
-        birth_length      = data.birth_length,
-        birth_weight      = data.birth_weight,
+        birth_length      = balita.birth_length,
+        birth_weight      = balita.birth_weight,
         mother_age        = data.mother_age,
         mother_height     = data.mother_height,
         anc_visits        = data.anc_visits,

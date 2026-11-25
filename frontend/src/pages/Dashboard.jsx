@@ -129,10 +129,6 @@ export default function Dashboard() {
                   innerRadius={60} outerRadius={80}
                   paddingAngle={3}
                   dataKey="value"
-                  label={({ name, percent }) =>
-                    `${name} ${(percent * 100).toFixed(0)}%`
-                  }
-                  labelLine={false}
                 >
                   {stuntingData.map((entry) => (
                     <Cell key={entry.name} fill={COLORS_STUNTING[entry.name] || '#6366f1'}/>

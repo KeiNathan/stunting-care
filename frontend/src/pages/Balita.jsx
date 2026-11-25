@@ -15,7 +15,8 @@ function hitungUsia(tanggal_lahir) {
 
 function ModalTambahBalita({ onClose, onSuccess }) {
   const [form, setForm] = useState({
-    nama: '', tanggal_lahir: '', jenis_kelamin: 'M', nama_ibu: ''
+    nama: '', tanggal_lahir: '', birth_length: '', birth_weight: '',
+    jenis_kelamin: 'M', nama_ibu: ''
   })
   const [loading, setLoading] = useState(false)
   const [error, setError]     = useState('')
@@ -76,6 +77,41 @@ function ModalTambahBalita({ onClose, onSuccess }) {
             />
           </div>
 
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Panjang Lahir (cm)
+              </label>
+              <input
+                type="number"
+                step="0.1"
+                min="0.1"
+                value={form.birth_length}
+                onChange={e => setForm({ ...form, birth_length: e.target.value })}
+                className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm
+                           focus:outline-none focus:ring-2 focus:ring-cyan-400"
+                placeholder="Contoh: 50"
+                required
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Berat Lahir (kg)
+              </label>
+              <input
+                type="number"
+                step="0.01"
+                min="0.01"
+                value={form.birth_weight}
+                onChange={e => setForm({ ...form, birth_weight: e.target.value })}
+                className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm
+                           focus:outline-none focus:ring-2 focus:ring-cyan-400"
+                placeholder="Contoh: 3.2"
+                required
+              />
+            </div>
+          </div>
+
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Jenis Kelamin
@@ -130,12 +166,106 @@ function ModalTambahBalita({ onClose, onSuccess }) {
   )
 }
 
+function ModalDataLahir({ balita, onClose, onSuccess }) {
+  const [form, setForm] = useState({
+    birth_length: balita.birth_length ?? '',
+    birth_weight: balita.birth_weight ?? '',
+  })
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    setLoading(true)
+    setError('')
+    try {
+      await api.put(`/api/balita/${balita.id}`, {
+        birth_length: parseFloat(form.birth_length),
+        birth_weight: parseFloat(form.birth_weight),
+      })
+      onSuccess()
+      onClose()
+    } catch (err) {
+      setError(err.response?.data?.detail || 'Gagal memperbarui data lahir')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  return (
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+      <div className="bg-[#F0FDFA] rounded-xl shadow-lg w-full max-w-md p-5 sm:p-6">
+        <h2 className="text-lg font-bold text-gray-800 mb-1">Lengkapi Data Lahir</h2>
+        <p className="text-sm text-gray-500 mb-4">{balita.nama}</p>
+
+        {error && (
+          <div className="bg-red-50 border border-red-200 text-red-600 text-sm px-4 py-2 rounded-lg mb-4">
+            {error}
+          </div>
+        )}
+
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Panjang Lahir (cm)
+            </label>
+            <input
+              type="number"
+              step="0.1"
+              min="0.1"
+              value={form.birth_length}
+              onChange={e => setForm({ ...form, birth_length: e.target.value })}
+              className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm
+                         focus:outline-none focus:ring-2 focus:ring-cyan-400"
+              required
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Berat Lahir (kg)
+            </label>
+            <input
+              type="number"
+              step="0.01"
+              min="0.01"
+              value={form.birth_weight}
+              onChange={e => setForm({ ...form, birth_weight: e.target.value })}
+              className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm
+                         focus:outline-none focus:ring-2 focus:ring-cyan-400"
+              required
+            />
+          </div>
+          <div className="flex gap-3 pt-2">
+            <button
+              type="button"
+              onClick={onClose}
+              className="flex-1 border border-gray-300 text-gray-600 py-2.5 rounded-lg
+                         text-sm hover:bg-gray-50 transition-all"
+            >
+              Batal
+            </button>
+            <button
+              type="submit"
+              disabled={loading}
+              className="flex-1 bg-teal-600 hover:bg-teal-700 disabled:bg-teal-400
+                         text-white py-2.5 rounded-lg text-sm font-semibold transition-all"
+            >
+              {loading ? 'Menyimpan...' : 'Simpan'}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  )
+}
+
 export default function Balita() {
   const [balitaList, setBalitaList] = useState([])
   const [filtered, setFiltered]     = useState([])
   const [search, setSearch]         = useState('')
   const [loading, setLoading]       = useState(true)
   const [showModal, setShowModal]   = useState(false)
+  const [balitaDataLahir, setBalitaDataLahir] = useState(null)
   const navigate = useNavigate()
 
   const fetchBalita = () => {
@@ -257,10 +387,24 @@ export default function Balita() {
                   <User size={14} className="text-gray-400"/>
                   <span className="min-w-0 break-words">Ibu: {b.nama_ibu}</span>
                 </div>
+                <div className="text-sm text-gray-600">
+                  Lahir: {b.birth_length != null ? `${b.birth_length} cm` : 'belum diisi'}
+                  {' · '}
+                  {b.birth_weight != null ? `${b.birth_weight} kg` : 'belum diisi'}
+                </div>
               </div>
 
               {/* Actions */}
               <div className="flex flex-wrap gap-2 pt-3 border-t border-gray-100">
+                {(b.birth_length == null || b.birth_weight == null) && (
+                  <button
+                    onClick={() => setBalitaDataLahir(b)}
+                    className="w-full border border-amber-300 text-amber-700
+                               hover:bg-amber-50 py-2 rounded-lg text-xs font-semibold transition-all"
+                  >
+                    Lengkapi Data Lahir
+                  </button>
+                )}
                 <button
                   onClick={() => navigate(`/prediksi?balita_id=${b.id}&nama=${b.nama}`)}
                   className="min-w-[calc(50%-0.25rem)] flex-1 bg-teal-600 hover:bg-teal-700 text-white
@@ -292,6 +436,13 @@ export default function Balita() {
       {showModal && (
         <ModalTambahBalita
           onClose={() => setShowModal(false)}
+          onSuccess={fetchBalita}
+        />
+      )}
+      {balitaDataLahir && (
+        <ModalDataLahir
+          balita={balitaDataLahir}
+          onClose={() => setBalitaDataLahir(null)}
           onSuccess={fetchBalita}
         />
       )}

@@ -1,10 +1,18 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from sqlalchemy import text
 from app.database import Base, engine
 from app.routers import auth, users, balita, prediksi, dashboard
 
 # ── Buat semua tabel di database ──────────────────────────────
 Base.metadata.create_all(bind=engine)
+with engine.begin() as connection:
+    connection.execute(text(
+        "ALTER TABLE balita ADD COLUMN IF NOT EXISTS birth_length FLOAT"
+    ))
+    connection.execute(text(
+        "ALTER TABLE balita ADD COLUMN IF NOT EXISTS birth_weight FLOAT"
+    ))
 
 # ── Inisialisasi FastAPI ───────────────────────────────────────
 app = FastAPI(

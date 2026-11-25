@@ -32,6 +32,8 @@ def create_balita(
         id            = uuid.uuid4(),
         nama          = data.nama,
         tanggal_lahir = data.tanggal_lahir,
+        birth_length  = data.birth_length,
+        birth_weight  = data.birth_weight,
         jenis_kelamin = data.jenis_kelamin,
         nama_ibu      = data.nama_ibu,
         kader_id      = current_user.id,

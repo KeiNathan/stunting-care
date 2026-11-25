@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, Date, DateTime, Enum, ForeignKey
+from sqlalchemy import Column, String, Date, DateTime, Enum, ForeignKey, Float
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 from app.database import Base
@@ -16,6 +16,8 @@ class Balita(Base):
     id             = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     nama           = Column(String(100), nullable=False)
     tanggal_lahir  = Column(Date, nullable=False)
+    birth_length   = Column(Float, nullable=True)
+    birth_weight   = Column(Float, nullable=True)
     jenis_kelamin  = Column(Enum(GenderEnum), nullable=False)
     nama_ibu       = Column(String(100), nullable=False)
     kader_id       = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=False)

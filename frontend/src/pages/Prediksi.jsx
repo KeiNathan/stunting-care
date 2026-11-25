@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { useSearchParams, useNavigate } from 'react-router-dom'
+import { useSearchParams } from 'react-router-dom'
 import api from '../api/axios'
 import { Activity, ChevronDown, ChevronUp, CheckCircle, AlertTriangle, XCircle } from 'lucide-react'
 
@@ -140,9 +140,7 @@ function HasilPrediksi({ hasil, onReset }) {
 
 export default function Prediksi() {
   const [searchParams] = useSearchParams()
-  const navigate       = useNavigate()
   const balitaId       = searchParams.get('balita_id')
-  const namaBalita     = searchParams.get('nama')
 
   const [balitaList, setBalitaList] = useState([])
   const [selectedBalita, setSelectedBalita] = useState(balitaId || '')
@@ -161,8 +159,6 @@ export default function Prediksi() {
     imunisasi       : 'Complete',
     asi_eksklusif   : true,
     // Advanced
-    birth_length    : '',
-    birth_weight    : '',
     mother_age      : '',
     mother_height   : '',
     mother_education: 'High School',
@@ -196,8 +192,6 @@ export default function Prediksi() {
         ekonomi       : form.ekonomi,
         imunisasi     : form.imunisasi,
         asi_eksklusif : form.asi_eksklusif,
-        ...(form.birth_length  && { birth_length:   parseFloat(form.birth_length)  }),
-        ...(form.birth_weight  && { birth_weight:   parseFloat(form.birth_weight)  }),
         ...(form.mother_age    && { mother_age:      parseFloat(form.mother_age)    }),
         ...(form.mother_height && { mother_height:   parseFloat(form.mother_height) }),
         mother_education : form.mother_education,
@@ -404,32 +398,6 @@ export default function Prediksi() {
           {showAdvanced && (
             <div className="px-5 pb-5 space-y-4 border-t border-gray-100">
               <div className="grid grid-cols-2 gap-4 pt-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Panjang Lahir (cm)
-                  </label>
-                  <input
-                    type="number" step="0.1"
-                    value={form.birth_length}
-                    onChange={e => setForm({ ...form, birth_length: e.target.value })}
-                    className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm
-                               focus:outline-none focus:ring-2 focus:ring-cyan-400"
-                    placeholder="Contoh: 50.0"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Berat Lahir (kg)
-                  </label>
-                  <input
-                    type="number" step="0.1"
-                    value={form.birth_weight}
-                    onChange={e => setForm({ ...form, birth_weight: e.target.value })}
-                    className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm
-                               focus:outline-none focus:ring-2 focus:ring-cyan-400"
-                    placeholder="Contoh: 3.2"
-                  />
-                </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
                     Usia Ibu (tahun)
